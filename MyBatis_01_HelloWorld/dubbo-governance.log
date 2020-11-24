@@ -1,3 +1,0 @@
-2020-11-24 21:33:31,484 [main] DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (BaseJdbcLogger.java:145) - ==>  Preparing: select * from tbl_employee where id = ? 
-2020-11-24 21:33:31,551 [main] DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (BaseJdbcLogger.java:145) - ==> Parameters: 1(Integer)
-2020-11-24 21:33:31,601 [main] DEBUG org.apache.ibatis.logging.jdbc.BaseJdbcLogger (BaseJdbcLogger.java:145) - <==      Total: 1

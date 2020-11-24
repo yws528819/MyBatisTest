@@ -1,6 +1,7 @@
 package com.yws.test;
 
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.ibatis.io.Resources;
@@ -10,7 +11,24 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
 import com.yws.bean.Employee;
+import com.yws.dao.EmployeeMapper;
 
+/**
+ * 1.接口式编程
+ * 原生：                 Dao ===> DaoImpl
+ * mybatis  Dao ===> xxMapper.xml
+ * 
+ * 2.sqlSession代表和数据库一次对话；用完必须关闭
+ * 3.SqlSession和Connection一样都是非线程安全。每次使用去获取新的对象。
+ * 4.mapper接口没有实现类，但是mybatis会为这个接口生成一个代理对象。
+ * 		(将接口和xml绑定)
+ * 		EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
+ * 5.两个重要的配置文件：
+ * 		mybatis的全局配置文件，包含数据库连接池信息，事务管理器等...系统运行环境信息
+ * 		sql映射文件：保存每一个sql语句的映射信息
+ * @author mayn
+ *
+ */
 class MyBatisTest {
 
 	/**
@@ -27,18 +45,50 @@ class MyBatisTest {
 	 */
 	@Test
 	void test() throws Exception {
-		String resource = "mybatis-config.xml";
-		InputStream inputStream = Resources.getResourceAsStream(resource);
-		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		//1.获取sqlSessionFactory对象
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
 		
 		//2.获取sqlSession实例，能直接执行已经映射的sql语句
 		SqlSession session = sqlSessionFactory.openSession();
 		try {
 			//sql的唯一标识：statement Unique identifier matching the statement to use.
 			//执行sql要用的参数：parameter A parameter object to pass to the statement.
-			Employee e = session.selectOne("com.yws.EmployeeMapper.selectEmp", 1);
+			Employee e = session.selectOne("com.yws.dao.EmployeeMapper.getEmpById", 1);
 			System.out.println(e);		
 		}finally {
+			session.close();
+		}
+
+	}
+
+	/**
+	 * 获取sqlSessionFactory对象
+	 * @return
+	 * @throws IOException
+	 */
+	private SqlSessionFactory getSqlSessionFactory() throws IOException {
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = Resources.getResourceAsStream(resource);
+		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+		return sqlSessionFactory;
+	}
+	
+	@Test
+	void test01() throws Exception {
+		//1.获取sqlSessionFactory对象
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		
+		//2.获取sqlSession实例，能直接执行已经映射的sql语句
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		try {
+			//3.获取接口的实现类对象
+			//会为接口自动创建一个代理对象，代理对象去执行增删改查方法
+			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+			System.out.println(mapper.getClass());
+			Employee emp = mapper.getEmpById(1);
+			System.out.println(emp);
+		} finally {
 			session.close();
 		}
 

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.yws.bean.Employee;
 import com.yws.dao.EmployeeMapper;
+import com.yws.dao.EmployeeMapperAnnotation;
 
 /**
  * 1.接口式编程
@@ -91,7 +92,25 @@ class MyBatisTest {
 		} finally {
 			session.close();
 		}
-
+	}
+	
+	@Test
+	void test02() throws Exception {
+		//1.获取sqlSessionFactory对象
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		
+		//2.获取sqlSession实例，能直接执行已经映射的sql语句
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		try {
+			//3.获取接口的实现类对象
+			//会为接口自动创建一个代理对象，代理对象去执行增删改查方法
+			EmployeeMapperAnnotation mapper = session.getMapper(EmployeeMapperAnnotation.class);			
+			Employee emp = mapper.getEmployee(1);
+			System.out.println(emp);
+		}finally {
+			session.close();
+		}
 	}
 
 }

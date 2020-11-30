@@ -3,6 +3,7 @@ package com.yws.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -108,6 +109,60 @@ class MyBatisTest {
 			EmployeeMapperAnnotation mapper = session.getMapper(EmployeeMapperAnnotation.class);			
 			Employee emp = mapper.getEmployee(1);
 			System.out.println(emp);
+		}finally {
+			session.close();
+		}
+	}
+	
+	/**
+	 * 测试增删改
+	 * 1.mybatis允许增删改直接定义以下类型返回值
+	 * 		Integer,Long,Boolean
+	 * 2.我们需要手动提交事务
+	 * 		sqlSessionFactory.openSession(); -->手动提交
+	 * 		sqlSessionFactory.openSession(true); -->自动提交
+	 * @throws Exception
+	 */
+	@Test
+	void test03() throws Exception {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		//1.获取到的sqlSession不会自动提交事务
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		try {
+			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+			//增加
+			Employee employee = new Employee(null, "jerry2", "123@qq.com", "1");
+			mapper.addEmp(employee);
+			System.out.println(employee.getId());
+			
+			//修改
+//			Employee employee = new Employee(1, "jerry", "jerry@qq.com", "0");
+//			mapper.updateEmp(employee);
+			
+			//删除
+//			mapper.deleteEmpById(3);
+			
+			//2.手动提交事务
+			session.commit();
+		} finally {
+			session.close();
+		}
+	}
+	
+	@Test
+	void test04() throws Exception {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		try {
+			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+			//getEmpByIdAndLastName
+//			Employee emp = mapper.getEmpByIdAndLastName(1, "jerry");
+//			System.out.println(emp);
+			
+			List<Employee> emps = mapper.getEmpsByLastNameLike("%e%");
+			emps.stream().forEach(e -> System.out.println(e));
 		}finally {
 			session.close();
 		}

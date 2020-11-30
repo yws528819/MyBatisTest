@@ -16,4 +16,73 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="oracle">
 		select * from tbl_employee where id = #{id}
 	</select>
+	
+	<!-- parameterType：参数类型，可以省略
+		获取自增主键的值：
+			mybatis支持自增主键，自增主键的获取，mybatis也是利用statement.getGeneratedKey()；
+			useGenerateddKeys = "true"：使用自增主键获取主键值策略
+			keyProperty：指定对应的主键属性，也就是mybatis获取到主键值以后，将这个值封装给javaBean的哪个属性
+	 -->
+	<insert id="addEmp" useGeneratedKeys="true" keyProperty="id" databaseId="mysql">
+		insert into tbl_employee (last_name, email, gender)
+			values (#{lastName}, #{email}, #{gender})
+	</insert>
+	
+	<!-- parameterType：参数类型，可以省略
+		keyProperty：查出的主键值封装给javaBean的哪个属性
+		order="BEFORE"：当前sql在插入sql之前运行
+		       AFTER：当前sql在插入sql之后运行
+		resultType：查出的数据的返回值类型
+		BEFORE运行顺序：
+			先运行selectKey查询id的sql，查出id值封装给javaBean的id属性
+			在运行插入的sql，就可以去除id属性对应的值
+		AFTER运行顺序：
+			先运行插入的sql（从序列中去除新值作为id），
+			再运行selectKey查询id的sql
+	 -->
+	<insert id="addEmp" databaseId="oracle">
+		<!-- BEFORE -->	
+ 		<selectKey keyProperty="id" order="BEFORE" resultType="Integer">
+			select employee_seq.nextval from dual
+		</selectKey>
+		insert into tbl_employee (id, last_name, email, gender)
+			values (#{id}, #{lastName}, #{email}, #{gender})
+			
+<!-- AFTER： 	取的是最新的序号，可能刚好别人也用了，会有问题	（了解）
+		<selectKey keyProperty="id" order="AFTER" resultType="Integer">
+			select employee_seq.currval from dual
+		</selectKey>
+		insert into tbl_employee (id, last_name, email, gender)
+			values (employee_seq.nextval, #{lastName}, #{email}, #{gender}) -->
+	</insert>
+	
+	<update id="updateEmp">
+		update tbl_employee 
+		set 
+			last_name = #{lastName},
+			email =  #{email},
+			gender = #{gender}
+		where id = #{id}	
+	</update>
+	
+	<delete id="deleteEmpById">
+		delete from tbl_employee where id = #{id}
+	</delete>
+	
+	
+	<select id="getEmpByIdAndLastName" resultType="com.yws.bean.Employee">
+		select * from 
+			tbl_employee
+		<!-- where id = #{param1} and last_name = #{param2} -->
+		<!-- where id = #{0} and last_name = #{1} -->
+		where id = #{id} and last_name = #{lastName}
+	</select>
+	
+	
+	<select id="getEmpsByLastNameLike" resultType="com.yws.bean.Employee">
+		select * from 
+			tbl_employee
+		where last_name like #{lastName}
+	</select>
+	
 </mapper>

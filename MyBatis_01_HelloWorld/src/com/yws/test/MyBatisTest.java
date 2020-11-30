@@ -4,6 +4,7 @@ package com.yws.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -132,7 +133,7 @@ class MyBatisTest {
 		try {
 			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
 			//Ôö¼Ó
-			Employee employee = new Employee(null, "jerry2", "123@qq.com", "1");
+			Employee employee = new Employee(null, "jerry3", "123@qq.com", "1");
 			mapper.addEmp(employee);
 			System.out.println(employee.getId());
 			
@@ -161,8 +162,20 @@ class MyBatisTest {
 //			Employee emp = mapper.getEmpByIdAndLastName(1, "jerry");
 //			System.out.println(emp);
 			
-			List<Employee> emps = mapper.getEmpsByLastNameLike("%e%");
-			emps.stream().forEach(e -> System.out.println(e));
+			/*
+			 * List<Employee> emps = mapper.getEmpsByLastNameLike("%e%");
+			 * emps.stream().forEach(e -> System.out.println(e));
+			 */
+			
+			/*
+			 * Map<String, Object> map = mapper.getEmpBIdReturnMap(1);
+			 * System.out.println(map);
+			 */
+			
+			Map<Integer, Employee> empMaps = mapper.getEmpByLastNameLikeReturnMap("%e%");
+			System.out.println(empMaps);
+			
+			
 		}finally {
 			session.close();
 		}

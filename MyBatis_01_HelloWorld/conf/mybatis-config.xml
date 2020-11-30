@@ -110,12 +110,12 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 						不重要的，简单的Dao接口为了开发快速可以使用注解；
 		 -->
 		
- 		<mapper resource="com/yws/dao/EmployeeMapper.xml" /> 
+<!--  		<mapper resource="com/yws/dao/EmployeeMapper.xml" />  -->
 <!-- 		<mapper class="com.yws.dao.EmployeeMapper"/>
 		<mapper class="com.yws.dao.EmployeeMapperAnnotation"/> -->
 		<!-- 
 			批量注册
 		 -->
-		 <!-- <package name="com.yws.dao"/> -->
+		 <package name="com.yws.dao"/>
 	</mappers>
 </configuration>

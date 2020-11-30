@@ -85,4 +85,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where last_name like #{lastName}
 	</select>
 	
+	
+	<select id="getEmpBIdReturnMap" resultType="map">
+		select * from
+			tbl_employee
+		where id = #{id}
+	</select>
+	
+	<select id="getEmpByLastNameLikeReturnMap" resultType="com.yws.bean.Employee">
+		select * from 
+			tbl_employee
+		where last_name like #{lastName}	 
+		
+	</select>
+	
 </mapper>

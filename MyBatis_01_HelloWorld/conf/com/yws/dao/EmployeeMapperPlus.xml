@@ -86,5 +86,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getEmpByIdStep" resultMap="MyEmpByStep">
 		select * from tbl_employee where id=#{id}
 	</select>
+	
+	
+	<!-- 
+		可以使用延迟加载：（按需加载）
+		Employee->Dept
+			我们每次查询Employee对象的时候，都将一起查询出来。
+			部门信息在我们使用的时候再去查询；
+			分段查询的基础上加上两个配置
+	 -->
+	
+	<!-- ====================association==================== -->
+	
+	<!-- 
+		场景二
+			查询部门的时候，将对应部门的员工信息也查询出来，详细在DepartmentMapper.xml
+	 -->
 
 </mapper>

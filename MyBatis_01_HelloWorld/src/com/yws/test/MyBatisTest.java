@@ -12,7 +12,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
+import com.yws.bean.Department;
 import com.yws.bean.Employee;
+import com.yws.dao.DepartmentMapper;
 import com.yws.dao.EmployeeMapper;
 import com.yws.dao.EmployeeMapperAnnotation;
 import com.yws.dao.EmployeeMapperPlus;
@@ -200,11 +202,25 @@ class MyBatisTest {
 			 */
 			
 			Employee emp = mapper.getEmpByIdStep(1);
-			 System.out.println(emp);
-			 System.out.println(emp.getDeparment());
+			 System.out.println(emp.getLastName());
+			 //System.out.println(emp.getDeparment());
 		} finally {
 			session.close();
 		}
 	}
 
+	@Test
+	void test06() throws Exception {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		try {
+			DepartmentMapper mapper = session.getMapper(DepartmentMapper.class);
+			Department department = mapper.getDepByIdPlus(1);
+			System.out.println(department);
+			System.out.println(department.getEmps());
+		}finally {
+			session.close();
+		}
+	}
 }

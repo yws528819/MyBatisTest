@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yws.dao.EmployeeMapperPlus">
+	<resultMap type="com.yws.bean.Employee" id="mySimpleEmp">
+		<!-- 
+			指定主键列的封装规则
+			column：指定哪一列
+			property：指定对应的JavaBean属性
+		 -->
+		<id column="id" property="id"/>
+		<!-- 
+			定义普通列封装规则
+		 -->
+		<result column="last_name" property="lastName"/>
+		<!-- 其他不指定的列会自动封装：我们只要写resultMap就把全部的映射规则都写上 -->
+		<result column="email" property="email"/>		
+		<result column="gender" property="gender"/>
+	</resultMap>
+	<!-- resultMap：自定义结果集映射规则 -->
+	<select id="getEmpById" resultMap="mySimpleEmp">
+		select * from 
+			tbl_employee
+		where id=#{id}
+	</select>
+	
+	
+	<!--
+		联合查询：级联属性封装结果集
+	  -->
+	<resultMap type="com.yws.bean.Employee" id="myDifEmp">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+		<result column="d_id" property="deparment.id"/>
+		<result column="department_name" property="deparment.departmentName"/>
+	</resultMap>
+	
+	<!-- 
+		association可以指定联合的javaBean对象
+		property="deparment"：指定哪个属性是联合对象
+		javaType：指定这个属性对象的类型【不能省略】
+	  -->
+	<resultMap type="com.yws.bean.Employee" id="myDifEmp2">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+		<association property="deparment" javaType="com.yws.bean.Department">
+			<id column="d_id" property="id"/>
+			<result column="department_name" property="departmentName"/>
+		</association>
+	</resultMap>
+	<select id="getEmpAndDept" resultMap="myDifEmp2">
+		select e.id,e.last_name,e.email,e.gender,d.id d_id,d.department_name from 
+			tbl_employee e,tbl_dept d 
+		where
+			e.d_id=d.id and e.id=#{id}
+	</select>
+
+	<!-- 
+		使用association进行分布查询：
+		1.先按员工id查询员工信息
+		2.根据查询员工信息中的d_id值q部门表查出部门信息
+		3.部门设置到员工中
+	 -->
+	<resultMap type="com.yws.bean.Employee" id="MyEmpByStep">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+		<!-- association定义关联对象的封装规则 
+			select：表明当前属性是调用select指定的方法查出的结果
+			column：指定将哪一列的值传给这个方法
+			
+			流程：使用select指定的方法(传入column指定的这列参数的值)查出对象，并封装给property指定的属性
+		-->
+		<association property="deparment" 
+			select="com.yws.dao.DepartmentMapper.getDepById"
+			column="d_id"></association>
+	</resultMap>
+	
+	<select id="getEmpByIdStep" resultMap="MyEmpByStep">
+		select * from tbl_employee where id=#{id}
+	</select>
+
+</mapper>

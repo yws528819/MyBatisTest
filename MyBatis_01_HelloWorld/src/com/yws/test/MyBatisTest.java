@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import com.yws.bean.Employee;
 import com.yws.dao.EmployeeMapper;
 import com.yws.dao.EmployeeMapperAnnotation;
+import com.yws.dao.EmployeeMapperPlus;
 
 /**
  * 1.接口式编程
@@ -177,6 +178,31 @@ class MyBatisTest {
 			
 			
 		}finally {
+			session.close();
+		}
+	}
+	
+	@Test
+	void test05() throws Exception {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession session = sqlSessionFactory.openSession();
+		try {
+			EmployeeMapperPlus mapper = session.getMapper(EmployeeMapperPlus.class);
+			/*
+			 * Employee emp = mapper.getEmpById(1); 
+			 * System.out.println(emp);
+			 */
+			
+			/*
+			 * Employee emp = mapper.getEmpAndDept(1); 
+			 * System.out.println(emp);
+			 * System.out.println(emp.getDeparment());
+			 */
+			
+			Employee emp = mapper.getEmpByIdStep(1);
+			 System.out.println(emp);
+			 System.out.println(emp.getDeparment());
+		} finally {
 			session.close();
 		}
 	}

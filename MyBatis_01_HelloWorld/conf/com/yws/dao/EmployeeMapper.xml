@@ -96,7 +96,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from 
 			tbl_employee
 		where last_name like #{lastName}	 
-		
 	</select>
 	
 </mapper>

@@ -5,7 +5,14 @@ public class Employee {
 	private String lastName;
 	private String email;
 	private String gender;
+	private Department deparment;
 	
+	
+	
+	public Employee() {
+		super();
+	}
+
 	public Employee(Integer id, String lastName, String email, String gender) {
 		super();
 		this.id = id;
@@ -13,6 +20,7 @@ public class Employee {
 		this.email = email;
 		this.gender = gender;
 	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -36,6 +44,12 @@ public class Employee {
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	public Department getDeparment() {
+		return deparment;
+	}
+	public void setDeparment(Department deparment) {
+		this.deparment = deparment;
 	}
 	@Override
 	public String toString() {

@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			column="d_id"></association>
 	</resultMap>
 	
-	<select id="getEmpByIdStep" resultMap="MyEmpByStep">
+	<select id="getEmpByIdStep" resultMap="MyEmpDis">
 		select * from tbl_employee where id=#{id}
 	</select>
 	
@@ -107,5 +107,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 <select id="getEmpsByDeptId" resultType="com.yws.bean.Employee">
 	 	select * from tbl_employee where d_id = #{did}
 	 </select>
+	 
+	 
+	 
+	 <!-- 
+	 	<discriminator javaType=""></discriminator>
+	 	鉴别器：mybatis可以使用discriminator判断某列的值，然后根据某列的值改变封装行为
+	 	封装：Employee:
+	 		如果查出的是女生，就把部门信息查询出来，否则不查询
+			如果是男生，把last_name这一列的值赋值给email	 		
+	  -->
+	  <resultMap type="com.yws.bean.Employee" id="MyEmpDis">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<result column="email" property="email"/>
+		<result column="gender" property="gender"/>
+		
+		<!--
+			column：指定判断的列名
+			javaType：列值对应的java类型
+		  -->
+		<discriminator javaType="string" column="gender">
+			<!-- 女生  resultType：指定封装的结果类型，不能缺少。或者用resultMap-->
+			<case value="0" resultType="com.yws.bean.Employee">
+				<association property="deparment" 
+					select="com.yws.dao.DepartmentMapper.getDepById"
+					column="d_id"></association> 			
+			</case>
+			<!-- 男生 把last_name这一列的值赋值给email	 -->
+			<case value="1" resultType="com.yws.bean.Employee">
+				<id column="id" property="id"/>
+				<result column="last_name" property="lastName"/>
+				<result column="last_name" property="email"/>
+				<result column="gender" property="gender"/>				
+			</case>
+		
+		</discriminator>
+	  </resultMap>
 
 </mapper>

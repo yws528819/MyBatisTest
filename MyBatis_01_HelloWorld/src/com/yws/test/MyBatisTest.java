@@ -17,6 +17,7 @@ import com.yws.bean.Employee;
 import com.yws.dao.DepartmentMapper;
 import com.yws.dao.EmployeeMapper;
 import com.yws.dao.EmployeeMapperAnnotation;
+import com.yws.dao.EmployeeMapperDynamicSQL;
 import com.yws.dao.EmployeeMapperPlus;
 
 /**
@@ -201,9 +202,9 @@ class MyBatisTest {
 			 * System.out.println(emp.getDeparment());
 			 */
 			
-			Employee emp = mapper.getEmpByIdStep(1);
-			 System.out.println(emp.getLastName());
-			 //System.out.println(emp.getDeparment());
+			Employee emp = mapper.getEmpByIdStep(2);
+			 System.out.println(emp);
+			 System.out.println(emp.getDeparment());
 		} finally {
 			session.close();
 		}
@@ -225,5 +226,17 @@ class MyBatisTest {
 		}finally {
 			session.close();
 		}
+	}
+	
+	@Test
+	public void testDynamicSql() throws Exception {
+		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		SqlSession session = sqlSessionFactory.openSession();
+		
+		EmployeeMapperDynamicSQL mapper = session.getMapper(EmployeeMapperDynamicSQL.class);
+		Employee emp = new Employee(1, "%e%", "", "1");
+		List<Employee> emps = mapper.getEmpsByConditionIf(emp);
+		emps.stream().forEach(e -> System.out.println(e));
+		
 	}
 }

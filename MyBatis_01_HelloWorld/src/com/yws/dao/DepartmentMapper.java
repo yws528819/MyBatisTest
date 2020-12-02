@@ -6,4 +6,6 @@ public interface DepartmentMapper {
 	public Department getDepById(Integer id);
 	
 	public Department getDepByIdPlus(Integer id);
+	
+	public Department getDeptByIdStep(Integer id);
 }

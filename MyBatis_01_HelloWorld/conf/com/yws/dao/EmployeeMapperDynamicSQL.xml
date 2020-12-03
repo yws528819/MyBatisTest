@@ -7,7 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--  -->
 	<select id="getEmpsByConditionIf" resultType="com.yws.bean.Employee">
 		select * from tbl_employee
-		where
+		<!-- where 1=1 -->
+		<where>
 		<!--test：判断表达式(OGNL) 
 			OGNL参照官方文档
 				c:if test
@@ -18,19 +19,112 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			"" &quot;&quot;
 			&& &amp;&amp;	
 		 -->
-		<if test="id != null">
-			id = #{id}
-		</if>
-		<if test="lastName != null &amp;&amp; lastName.trim() != &quot;&quot;">
-			and last_name like #{lastName}
-		</if>
-		<if test="email != null and email.trim() != ''">
-			and email = #{email}
-		</if>
-		<!-- ognl会进行字符串与数字的转换判断 "0"==0 -->
-		<if test="gender == 0 or gender == 1">
-			and gender = #{gender}
-		</if>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="lastName != null &amp;&amp; lastName.trim() != &quot;&quot;">
+				and last_name like #{lastName}
+			</if>
+			<if test="email != null and email.trim() != ''">
+				and email = #{email}
+			</if>
+			<!-- ognl会进行字符串与数字的转换判断 "0"==0 -->
+			<if test="gender == 0 or gender == 1">
+				and gender = #{gender}
+			</if>		
+		</where>
+	</select>
+	
+	
+	<select id="getEmpsByConditionTrim" resultType="com.yws.bean.Employee">
+		select * from tbl_employee
+		<!-- 后面多出的and或者or where标签不能解决
+			trim标签体中是整个字符串拼接后的结果
+			prefix=""
+				前缀：给拼串后的整个字符串加一个前缀
+			prefixOverrides="" 
+				前缀覆盖：去掉整个字符串开头多余的字符
+			suffix="" 
+				后缀：给拼串后的整个字符串加一个后缀
+			suffixOverrides=""
+				后缀覆盖：去掉整个字符串结尾多余的字符
+		 -->
+		 <!-- 自定义字符串截取规则 -->
+		<trim prefix="where" suffixOverrides="and">
+			<if test="id != null">
+				id = #{id} and
+			</if>
+			<if test="lastName != null &amp;&amp; lastName.trim() != &quot;&quot;">
+				last_name like #{lastName} and
+			</if>
+			<if test="email != null and email.trim() != ''">
+				email = #{email} and
+			</if>
+			<!-- ognl会进行字符串与数字的转换判断 "0"==0 -->
+			<if test="gender == 0 or gender == 1">
+				gender = #{gender} and
+			</if>		
+		</trim>
+					
+	</select>
+	
+	
+	<select id="getEmpsByConditionChoose" resultType="com.yws.bean.Employee">
+		select * from tbl_employee
+		<where>
+			<!-- 
+				如果带了id就用id查，如果带了lastName就用lastName查，只会进入其中一个
+			 -->
+			<choose>
+				<when test="id != null">
+					id = #{id}
+				</when>
+				<when test="lastName != null">
+					last_name like #{lastName}
+				</when>
+				<when test="email != null">
+					email = #{email}
+				</when>
+				<otherwise>
+					gender = '0'
+				</otherwise>
+			</choose>			
+		</where>
+					
 	</select>
 
+	<update id="updateEmp">
+		update 
+			tbl_employee
+		<!-- set标签的使用 -->
+<!-- 		<set>
+			<if test="id != null">
+				id = #{id},
+			</if>
+			<if test="lastName != null &amp;&amp; lastName.trim() != &quot;&quot;">
+				last_name = #{lastName},
+			</if>
+			<if test="email != null and email.trim() != ''">
+				email = #{email},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>				
+		</set> -->
+		<!-- trim 拼串更新  -->
+		<trim prefix="set" suffixOverrides=",">
+			<if test="id != null">
+				id = #{id},
+			</if>
+			<if test="lastName != null &amp;&amp; lastName.trim() != &quot;&quot;">
+				last_name = #{lastName},
+			</if>
+			<if test="email != null and email.trim() != ''">
+				email = #{email},
+			</if>
+			<if test="gender != null">
+				gender = #{gender},
+			</if>			
+		</trim>
+	</update>
 </mapper>

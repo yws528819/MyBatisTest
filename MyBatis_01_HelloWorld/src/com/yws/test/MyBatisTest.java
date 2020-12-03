@@ -233,10 +233,34 @@ class MyBatisTest {
 		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
 		SqlSession session = sqlSessionFactory.openSession();
 		
-		EmployeeMapperDynamicSQL mapper = session.getMapper(EmployeeMapperDynamicSQL.class);
-		Employee emp = new Employee(1, "%e%", "", "1");
-		List<Employee> emps = mapper.getEmpsByConditionIf(emp);
-		emps.stream().forEach(e -> System.out.println(e));
-		
+		 try {
+				EmployeeMapperDynamicSQL mapper = session.getMapper(EmployeeMapperDynamicSQL.class);
+				Employee emp = new Employee(null, "%e%", "", "1");
+				List<Employee> emps = mapper.getEmpsByConditionIf(emp);
+				emps.stream().forEach(e -> System.out.println(e));
+				
+				//查询的时候如果某些条件没带可能sql拼装会有问题
+				//1.给where后面加上1=1，以后的条件都"and xxx"
+				//2.mybatis使用where标签来将所有的查询条件包括在内。mybatis会将where标签中拼装出来的sql，多出的and或者or删掉
+					//where标签只会去掉第一个多出来的and或者or
+				
+				//测试trim
+				/*
+				 * emps = mapper.getEmpsByConditionTrim(emp); emps.stream().forEach(e ->
+				 * System.out.println(e));
+				 */
+				
+				//测试choose
+				/*
+				 * emps = mapper.getEmpsByConditionChoose(emp); emps.stream().forEach(e
+				 * ->System.out.println(e));
+				 */
+				emp = new Employee(1, "Tom", null, "1");
+				 mapper.updateEmp(emp);
+		} finally {
+			session.close();
+		}
+		 
+		 
 	}
 }

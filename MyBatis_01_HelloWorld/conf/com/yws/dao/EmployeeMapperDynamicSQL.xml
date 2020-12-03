@@ -127,4 +127,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>			
 		</trim>
 	</update>
+	
+	
+	<select id="getEmpsByConditionForeach" resultType="com.yws.bean.Employee">
+		select * from tbl_employee where id in
+		<!-- 
+			collection：指定要遍历的集合；
+				list类型的参数会特殊处理封装在Map中，map的key就叫list
+			item：将遍历出的元素赋值给指定的变量
+			seperator：每个元素之间的分隔符
+			open：遍历出所有结果拼接一个开始的字符
+			close：遍历出所有结果拼接一个结束的字符
+			index：索引。遍历list的时候index就是索引，item就是当前值
+					   遍历map的时候index表示的就是map的key，item就是map的值
+			
+			
+			#{变量名}就能取出变量的值也就是当前遍历出的元素
+		 -->	
+		 <foreach collection="ids" item="item_id" separator="," 
+		 	open="(" close=")" index="">
+		 	#{item_id}
+		 </foreach>
+		 
+<!-- 		 <foreach collection="ids" item="item_id" separator="," 
+		 	open="where id in (" close=")" index="">
+		 	#{item_id}
+		 </foreach> -->
+	</select>
 </mapper>

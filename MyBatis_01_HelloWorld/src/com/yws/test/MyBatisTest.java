@@ -3,6 +3,7 @@ package com.yws.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -252,11 +253,15 @@ class MyBatisTest {
 				
 				//²âÊÔchoose
 				/*
-				 * emps = mapper.getEmpsByConditionChoose(emp); emps.stream().forEach(e
-				 * ->System.out.println(e));
+				 * emps = mapper.getEmpsByConditionChoose(emp); 
+				 * emps.stream().forEach(e->System.out.println(e));
 				 */
-				emp = new Employee(1, "Tom", null, "1");
-				 mapper.updateEmp(emp);
+				/*
+				 * emp = new Employee(1, "Tom", null, "1");
+				 *  mapper.updateEmp(emp);
+				 */
+				emps = mapper.getEmpsByConditionForeach(Arrays.asList("2","1"));
+				emps.stream().forEach(e->System.out.println(e));
 		} finally {
 			session.close();
 		}

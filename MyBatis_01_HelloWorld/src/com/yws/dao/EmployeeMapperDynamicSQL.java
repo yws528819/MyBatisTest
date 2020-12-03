@@ -2,6 +2,8 @@ package com.yws.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.yws.bean.Employee;
 
 public interface EmployeeMapperDynamicSQL {
@@ -12,4 +14,6 @@ public interface EmployeeMapperDynamicSQL {
 	public List<Employee> getEmpsByConditionChoose(Employee employee);
 	
 	public void updateEmp(Employee employee);
+	
+	public List<Employee> getEmpsByConditionForeach(@Param("ids") List<String> ids);
 }

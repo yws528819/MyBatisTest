@@ -265,7 +265,37 @@ class MyBatisTest {
 		} finally {
 			session.close();
 		}
-		 
-		 
 	}
+	
+	 
+	 @Test
+	 public void testBatchSave() throws Exception{
+		 SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		 SqlSession session = sqlSessionFactory.openSession();
+		 
+		 try {
+			EmployeeMapperDynamicSQL mapper = session.getMapper(EmployeeMapperDynamicSQL.class);
+			List<Employee> emps = Arrays.asList(
+					new Employee(null, "smith1", "123@163.com", "0", new Department(1)),
+					new Employee(null, "alien2", "123@163.com", "0", new Department(2)));
+			mapper.addEmps(emps);
+			session.commit();
+		} finally {
+			session.close();
+		}
+	 }
+	 
+	 @Test
+	 public void testInnerParam() throws Exception{
+		 SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
+		 SqlSession session = sqlSessionFactory.openSession();
+		 
+		 try {
+			 EmployeeMapperDynamicSQL mapper = session.getMapper(EmployeeMapperDynamicSQL.class);
+			 List<Employee> list = mapper.getEmpsTestInnerParameter(new Employee(1, "jerry2", null, null));
+			 list.stream().forEach(e -> System.out.println(e));
+		 } finally {
+			 session.close();
+		 }
+	 }
 }

@@ -7,8 +7,6 @@ public class Employee {
 	private String gender;
 	private Department deparment;
 	
-	
-	
 	public Employee() {
 		super();
 	}
@@ -19,6 +17,16 @@ public class Employee {
 		this.lastName = lastName;
 		this.email = email;
 		this.gender = gender;
+	}
+
+
+	public Employee(Integer id, String lastName, String email, String gender, Department deparment) {
+		super();
+		this.id = id;
+		this.lastName = lastName;
+		this.email = email;
+		this.gender = gender;
+		this.deparment = deparment;
 	}
 
 	public Integer getId() {

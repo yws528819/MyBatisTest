@@ -7,6 +7,11 @@ public class Department {
 	private String departmentName;
 	private List<Employee> emps;
 	
+	
+	public Department(Integer id) {
+		super();
+		this.id = id;
+	}
 	public Integer getId() {
 		return id;
 	}

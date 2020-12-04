@@ -154,4 +154,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		 	#{item_id}
 		 </foreach> -->
 	</select>
+	
+	<!-- 
+		MySql下批量保存：可以foreach遍历mysql支持 values(),(),()语法
+	 -->
+	<insert id="addEmps">
+		insert into tbl_employee (last_name, email, gender, d_id)
+		values 
+		<foreach collection="emps" item="emp" separator=",">
+			(#{emp.lastName}, #{emp.email}, #{emp.gender}, #{emp.deparment.id})
+		</foreach>
+		<!-- 
+			这种方式需要数据库连接属性allowMultiQueries=true；
+			这种分号分隔多个sql可以用于其他的批量操作（更新、删除）
+		 -->
+<!-- 		<foreach collection="emps" item="emp" separator=";">
+			insert into tbl_employee (last_name, email, gender, d_id)
+			values
+			(#{emp.lastName}, #{emp.email}, #{emp.gender}, #{emp.deparment.id})
+		</foreach> -->
+	</insert>
+	
+	<insert id="addEmps" databaseId="oracle">
+		<!-- Oralce第一种批量方式  -->
+<!--  		<foreach collection="emps" item="emp" open="begin" close="end;">
+			insert into tbl_employee (id, last_name, email, gender, d_id)
+			values
+			(employee_seq.nextval, #{emp.lastName}, #{emp.email}, #{emp.gender}, #{emp.deparment.id});
+		</foreach> -->
+		
+		<!-- Oralce第二种批量方式  -->
+		insert into tbl_employee (id, last_name, email, gender, d_id)
+			<foreach collection="emps" item="emp" separator="union" 
+				open="select employee_seq.nextval, lastName, email, gender, dId from (" 
+				close=")">
+				select #{emp.lastName} lastName, #{emp.email} email, #{emp.gender} gender, #{emp.deparment.id} dId from dual
+			</foreach>
+	</insert>
+	
+	<!-- 两个内置参数：
+		不只是方法传递过来的参数可以用来判断，取值。。。
+		mybatis默认还有两个内置参数；
+		_parameter：代表整个参数
+			单个参数：_parameter就是这个参数
+			多个参数：参数就会被封装为一个map：_parameter就是代表这个map
+			
+		_databaseId：如果配置了databaseIdProvider标签
+			_databaseId就是代表当前数据库的别名oracle	
+	 -->
+	 <select id="getEmpsTestInnerParameter" resultType="com.yws.bean.Employee">
+	 	<if test="_databaseId == 'mysql'">
+	 		select * from tbl_employee
+	 		<!-- bind：可以将OGNL表达式的值绑定到一个变量中，方便后来引用这个变量的值  -->
+	 		<bind name="_lastName" value="'%' + lastName + '%'"/>
+	 		<if test="_parameter != null">
+	 			where last_name like #{_lastName}
+<!-- 	 			where last_name like #{_parameter.lastName} -->
+	 			<!-- where last_name like #{lastName} -->
+	 		</if>
+	 	</if>
+	 	<if test="_databaseId == 'oracle'">
+	 		select * from tbl_employee
+	 	</if>
+	 </select>
+	
 </mapper>

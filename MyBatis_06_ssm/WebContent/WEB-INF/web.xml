@@ -16,7 +16,7 @@
 	<!--SpringMVC配置 -->
 	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
 	<servlet>
-		<servlet-name>springDispatcherServlet</servlet-name>
+		<servlet-name>spring</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>

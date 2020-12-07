@@ -15,7 +15,7 @@
 	</context:component-scan>
 
 	<!-- 引入数据源的配置文件 -->	
-	<context:property-placeholder location="classpath: dbconfig.properties"/>
+	<context:property-placeholder location="classpath:dbconfig.properties"/>
 	<!-- Spring用来控制业务逻辑，数据源，事务控制，aop -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="${jdbc.driver}"></property>
@@ -40,9 +40,9 @@
 	 <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
 	 	<property name="dataSource" ref="dataSource"></property>
 	 	<!-- configLocation指定全局配置文件的位置 -->
-	 	<property name="configLocation" value="classpath: mybatis-config.xml"></property>
+	 	<property name="configLocation" value="classpath:mybatis-config.xml"></property>
 	 	<!-- mapperLocations: 指定mapper文件的位置 -->
-	 	<property name="mapperLocations" value="classpath: mybatis/mapper/**/*.xml"></property>
+	 	<property name="mapperLocations" value="classpath:mybatis/mapper/**/*.xml"></property>
 	 </bean>
 	 
 	 <!-- 扫描所有的mapper接口的实现，让这些mapper能够自动注入；

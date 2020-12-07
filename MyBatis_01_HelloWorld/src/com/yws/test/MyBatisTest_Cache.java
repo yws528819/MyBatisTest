@@ -24,7 +24,7 @@ import com.yws.dao.EmployeeMapperPlus;
 class MyBatisTest_Cache {
 
 	/**
-	 * ��ȡsqlSessionFactory����
+	 * 获取sqlSessionFactory对象
 	 * @return
 	 * @throws IOException
 	 */
@@ -36,53 +36,53 @@ class MyBatisTest_Cache {
 	}
 	
 	/**
-	 * ��������
-	 * 	һ�����棺�����ػ��棩sqlSession����Ļ��档һ��������һֱ�����ģ�SQLSession�����һ��Map
-	 * 		�����ݿ��ͬһ�λỰ�ڼ��ѯ�������ݻ���ڱ��ػ����У�
-	 * 		�Ժ������Ҫ��ȡ����ͬ�����ݣ�ֱ�Ӵӻ������ã���û��Ҫȥ���ݿ��
+	 * 两级缓存
+	 * 	一级缓存：（本地缓存）sqlSession级别的缓存。一级缓存是一直开启的；SQLSession级别的一个Map
+	 * 		与数据库的同一次会话期间查询到的数据会放在本地缓存中；
+	 * 		以后如果需要获取到相同的数据，直接从缓存中拿，就没必要去数据库查
 	 * 
-	 * 		һ������ʧЧ�����û��ʹ�õ���ǰһ������������Ч�����ǣ�����Ҫ�����ݿ��ٴη�����ѯ��
-	 *      1.Sq1Sess1on��ͬ��
-     *      2.Sq1Sess1on��ͬ����ѯ������ͬ����ǰһ�������л�û��������ݣ�
-     *      3.sqlSession��ͬ�����β�ѯ��ִ������ɾ�Ĳ����������ɾ�Ŀ��ܶԵ�ǰ������Ӱ�죩
-     *      	3.1��չ����ͬ��sqlSession������ɾ�ģ�һ������δʧЧ��
-     *      4.sqlSession��ͬ���ֶ������һ�����棨������գ�
+	 * 		一级缓存失效情况（没有使用到当前一级缓存的情况，效果就是，还需要向数据库再次发出查询）
+	 *      1.Sq1Sess1on不同。
+     *      2.Sq1Sess1on相同，査询条件不同（当前一级緩存中还没有这个数据）
+     *      3.sqlSession相同，两次查询间执行了增删改操作（这次增删改可能对当前数据有影响）
+     *      	3.1扩展：不同的sqlSession做了增删改（一级缓存未失效）
+     *      4.sqlSession相同，手动清除了一级缓存（缓存清空）
 	 * 
 	 * 
-	 *  �������棺��ȫ�ֻ��棩������namespace����Ļ��棻һ��namespace��Ӧһ����������
-	 *  	�������ƣ�
-	 *  	1.һ���Ự����ѯһ�����ݣ�������ݾͱ����ڵ�ǰ�Ự��һ��������
-	 *  	2.����Ự�رգ�һ�������е����ݾͻᱻ���浽���������У��µĻỰ��ѯ��Ϣ���Ϳ��Բ��ն��������е�����
+	 *  二级缓存：（全局缓存）；基于namespace级别的缓存；一个namespace对应一个二级缓存
+	 *  	工作机制：
+	 *  	1.一个会话，查询一条数据，这个数据就被放在当前会话的一级缓存中
+	 *  	2.如果会话关闭，一级缓存中的数据就会被保存到二级缓存中；新的会话查询信息，就可以参照二级缓存中的内容
 	 *  	3.sqlSession -> EmployeeMapper -> Employee
 	 *  				 -> DepartmentMapper -> Department
-	 *  	  ��ͬnamespace��������ݻ�����Լ���Ӧ�Ļ�����(map)
-	 *  	Ч�������ݻ�Ӷ��������л�ȡ
-	 *  		��������ݶ���Ĭ���ȷ���һ�������С�
-	 *  		ֻ�лỰ�ύ���߹ر��Ժ�һ�������е����ݲŻ�ת�Ƶ�����������ȥ
+	 *  	  不同namespace查出的数据会放在自己对应的缓存中(map)
+	 *  	效果：数据会从二级缓存中获取
+	 *  		查出的数据都会默认先放在一级缓存中。
+	 *  		只有会话提交或者关闭以后，一级缓存中的数据才会转移到二级缓存中去
 	 *  
-	 *  ʹ�ã�
-	 *   	1)����ȫ�ֶ�����������<setting name="cacheEnabled" value="true"/>
-	 *   	2)ȥmapper.xml������ʹ�ö�������:
+	 *  使用：
+	 *   	1)开启全局二级缓存配置<setting name="cacheEnabled" value="true"/>
+	 *   	2)去mapper.xml中配置使用二级缓存:
 	 *   		<cache></cache>
-	 *   	3)���ǵ�POJO��Ҫʵ�����л��ӿ�
+	 *   	3)我们的POJO需要实现序列化接口
 	 *   
-	 *   �ͻ����йص�����/���ԣ�
-	 *   	1��cacheEnabled=true��false���رջ��棨��������رգ���һ������һֱ���õģ�
-	 *   	2��ÿ��select��ǩ����useCache="true"��
-	 *   		false����ʹ�û��棨һ��������Ȼʹ�ã��������治ʹ�ã�
-	 *   	3��ÿ����ɾ�ı�ǩ�ģ�flushCache="true"����һ���������������
-	 *   		��ɾ��ִ����ɺ�ͻ�������棻
-	 *   		���ԣ�flushCache="true"��һ�����������ˣ���������Ҳ�ᱻ���
-	 *   	             ��ѯ��ǩ��flushCache="false"��
-	 *   			���flushCache="true"��ÿ�β�ѯ֮�󶼻���ջ��棻������û�б�ʹ�õ�
-	 *   	4��sqlSession.clearCache();ֻ�������ǰsession��һ�����棻
-	 *   	5��localCacheScope�����ػ���������һ������SESSION������ǰ�Ự���������ݱ����ڻỰ�����У� 
-	 *   			STATEMENT�����Խ���һ�����棻
+	 *   和缓存有关的设置/属性：
+	 *   	1）cacheEnabled=true：false：关闭缓存（二级缓存关闭）（一级缓存一直可用的）
+	 *   	2）每个select标签都有useCache="true"：
+	 *   		false：不使用缓存（一级缓存依然使用，二级缓存不使用）
+	 *   	3）每个增删改标签的：flushCache="true"；（一级二级都会清除）
+	 *   		增删改执行完成后就会清除缓存；
+	 *   		测试：flushCache="true"：一级缓存就清空了；二级缓存也会被清除
+	 *   	             查询标签：flushCache="false"；
+	 *   			如果flushCache="true"；每次查询之后都会清空缓存；缓存是没有被使用的
+	 *   	4）sqlSession.clearCache();只是清除当前session的一级缓存；
+	 *   	5）localCacheScope：本地缓存作用域（一级缓存SESSION）；当前会话的所有数据保存在会话缓存中； 
+	 *   			STATEMENT：可以禁用一级缓存；
 	 *   
-	 *   �������������ϣ�
-	 *   	1��������������������
-	 *   	2����������������ϻ������������ٷ�����
-	 *   	3��mapper.xml��ʹ���Զ��建��
+	 *   第三方缓存整合：
+	 *   	1）导入第三方缓存包即可
+	 *   	2）导入与第三方整合缓存的适配包；官方下载
+	 *   	3）mapper.xml中使用自定义缓存
 	 *   	<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
 	 *   
 	 * @throws Exception 
@@ -104,7 +104,7 @@ class MyBatisTest_Cache {
 			//mapper2.addEmp(new Employee(null, "Lily", "123@qq.com", "1"));
 			
 			session2.clearCache();
-			//�ڶ��β�ѯ�ǴӶ��������������ݣ���û�з����µ�sql
+			//第二次查询是从二级缓存中拿数据，并没有发送新的sql
 			Employee emp2 = mapper2.getEmpById(1);
 			session2.close();
 			
@@ -135,21 +135,21 @@ class MyBatisTest_Cache {
 			Employee emp2 = mapper.getEmpById(1);
 			System.out.println(emp2);
 			
-			//1.sqlSession��ͬ
+			//1.sqlSession不同
 //			EmployeeMapper mapper2 = session2.getMapper(EmployeeMapper.class);
 //			Employee emp2 = mapper2.getEmpById(1);
 			
 			
-			//2.sqlSession��ͬ����ѯ������ͬ����ǰһ�������л�û��������ݣ�
+			//2.sqlSession相同，查询条件不同（当前一级缓存中还没有这个数据）
 			//Employee emp2 = mapper.getEmpById(3);	
 			
-			//3.sqlSession��ͬ�����β�ѯ��ִ������ɾ�Ĳ����������ɾ�Ŀ��ܶԵ�ǰ������Ӱ�죩
+			//3.sqlSession相同，两次查询间执行了增删改操作（这次增删改可能对当前数据有影响）
 			//mapper.addEmp(new Employee(null, "lucy", "123@123.com", "0"));
-			//3.1��չ����ͬ��sqlSession������ɾ�ģ�һ������δʧЧ��
+			//3.1扩展：不同的sqlSession做了增删改（一级缓存未失效）
 //			EmployeeMapper mapper2 = session2.getMapper(EmployeeMapper.class);
 //			mapper2.addEmp(new Employee(null, "lucy2", "123@123.com", "0"));
 			
-			//4.sqlSession��ͬ���ֶ������һ�����棨������գ�
+			//4.sqlSession相同，手动清除了一级缓存（缓存清空）
 //			session.clearCache();
 //			Employee emp2 = mapper.getEmpById(1);
 			System.out.println(emp == emp2);

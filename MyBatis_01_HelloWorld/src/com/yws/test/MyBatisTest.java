@@ -22,45 +22,45 @@ import com.yws.dao.EmployeeMapperDynamicSQL;
 import com.yws.dao.EmployeeMapperPlus;
 
 /**
- * 1.½Ó¿ÚÊ½±à³Ì
- * Ô­Éú£º                 Dao ===> DaoImpl
+ * 1.æ¥å£å¼ç¼–ç¨‹
+ * åŸç”Ÿï¼š                 Dao ===> DaoImpl
  * mybatis  Dao ===> xxMapper.xml
  * 
- * 2.sqlSession´ú±íºÍÊı¾İ¿âÒ»´Î¶Ô»°£»ÓÃÍê±ØĞë¹Ø±Õ
- * 3.SqlSessionºÍConnectionÒ»Ñù¶¼ÊÇ·ÇÏß³Ì°²È«¡£Ã¿´ÎÊ¹ÓÃÈ¥»ñÈ¡ĞÂµÄ¶ÔÏó¡£
- * 4.mapper½Ó¿ÚÃ»ÓĞÊµÏÖÀà£¬µ«ÊÇmybatis»áÎªÕâ¸ö½Ó¿ÚÉú³ÉÒ»¸ö´úÀí¶ÔÏó¡£
- * 		(½«½Ó¿ÚºÍxml°ó¶¨)
+ * 2.sqlSessionä»£è¡¨å’Œæ•°æ®åº“ä¸€æ¬¡å¯¹è¯ï¼›ç”¨å®Œå¿…é¡»å…³é—­
+ * 3.SqlSessionå’ŒConnectionä¸€æ ·éƒ½æ˜¯éçº¿ç¨‹å®‰å…¨ã€‚æ¯æ¬¡ä½¿ç”¨å»è·å–æ–°çš„å¯¹è±¡ã€‚
+ * 4.mapperæ¥å£æ²¡æœ‰å®ç°ç±»ï¼Œä½†æ˜¯mybatisä¼šä¸ºè¿™ä¸ªæ¥å£ç”Ÿæˆä¸€ä¸ªä»£ç†å¯¹è±¡ã€‚
+ * 		(å°†æ¥å£å’Œxmlç»‘å®š)
  * 		EmployeeMapper mapper = sqlSession.getMapper(EmployeeMapper.class);
- * 5.Á½¸öÖØÒªµÄÅäÖÃÎÄ¼ş£º
- * 		mybatisµÄÈ«¾ÖÅäÖÃÎÄ¼ş£¬°üº¬Êı¾İ¿âÁ¬½Ó³ØĞÅÏ¢£¬ÊÂÎñ¹ÜÀíÆ÷µÈ...ÏµÍ³ÔËĞĞ»·¾³ĞÅÏ¢
- * 		sqlÓ³ÉäÎÄ¼ş£º±£´æÃ¿Ò»¸ösqlÓï¾äµÄÓ³ÉäĞÅÏ¢
+ * 5.ä¸¤ä¸ªé‡è¦çš„é…ç½®æ–‡ä»¶ï¼š
+ * 		mybatisçš„å…¨å±€é…ç½®æ–‡ä»¶ï¼ŒåŒ…å«æ•°æ®åº“è¿æ¥æ± ä¿¡æ¯ï¼Œäº‹åŠ¡ç®¡ç†å™¨ç­‰...ç³»ç»Ÿè¿è¡Œç¯å¢ƒä¿¡æ¯
+ * 		sqlæ˜ å°„æ–‡ä»¶ï¼šä¿å­˜æ¯ä¸€ä¸ªsqlè¯­å¥çš„æ˜ å°„ä¿¡æ¯
  * @author mayn
  *
  */
 class MyBatisTest {
 
 	/**
-	 * 1.¸ù¾İxmlÅäÖÃÎÄ¼ş£¨È«¾ÖÅäÖÃÎÄ¼ş£©´´½¨Ò»¸ösqlSessionFactory¶ÔÏó
-	 * 		ÓĞÊı¾İÔ´µÄÒ»Ğ©ÔËĞĞ»·¾³ĞÅÏ¢
-	 * 2.sqlÓ³ÉäÎÄ¼ş£ºÅäÖÃÁËÃ¿Ò»¸ösql£¬ÒÔ¼°sqlµÄ·â×°¹æÔòµÈ¡£
-	 * 3.½«sqlÓ³ÉäÎÄ¼ş×¢²áÔÚÈ«¾ÖÅäÖÃÎÄ¼şÖĞ
-	 * 4.Ğ´´úÂë£º
-	 * 		1£©¸ù¾İÈ«¾ÖÅäÖÃÎÄ¼şµÃµ½SqlSessionFactory£»
-	 * 		2£©Ê¹ÓÃSqlSessionFactory¹¤³§£¬»ñÈ¡µ½sqlSession¶ÔÏóÊ¹ÓÃËüÀ´Ö´ĞĞÔöÉ¾¸Ä²é
-	 * 		       Ò»¸ösqlSession¾ÍÊÇ´ú±íºÍÊı¾İ¿âµÄÒ»´Î»á»°£¬ÓÃÍê¹Ø±Õ
-	 * 		3£©Ê¹ÓÃsqlµÄÎ¨Ò»±êÊ¶À´¸æËßMyBatisÖ´ĞĞÄÄ¸ösql£¬sql¶¼ÊÇ±£´æÔÚsqlÓ³ÉäÎÄ¼şÖĞµÄ
+	 * 1.æ ¹æ®xmlé…ç½®æ–‡ä»¶ï¼ˆå…¨å±€é…ç½®æ–‡ä»¶ï¼‰åˆ›å»ºä¸€ä¸ªsqlSessionFactoryå¯¹è±¡
+	 * 		æœ‰æ•°æ®æºçš„ä¸€äº›è¿è¡Œç¯å¢ƒä¿¡æ¯
+	 * 2.sqlæ˜ å°„æ–‡ä»¶ï¼šé…ç½®äº†æ¯ä¸€ä¸ªsqlï¼Œä»¥åŠsqlçš„å°è£…è§„åˆ™ç­‰ã€‚
+	 * 3.å°†sqlæ˜ å°„æ–‡ä»¶æ³¨å†Œåœ¨å…¨å±€é…ç½®æ–‡ä»¶ä¸­
+	 * 4.å†™ä»£ç ï¼š
+	 * 		1ï¼‰æ ¹æ®å…¨å±€é…ç½®æ–‡ä»¶å¾—åˆ°SqlSessionFactoryï¼›
+	 * 		2ï¼‰ä½¿ç”¨SqlSessionFactoryå·¥å‚ï¼Œè·å–åˆ°sqlSessionå¯¹è±¡ä½¿ç”¨å®ƒæ¥æ‰§è¡Œå¢åˆ æ”¹æŸ¥
+	 * 		       ä¸€ä¸ªsqlSessionå°±æ˜¯ä»£è¡¨å’Œæ•°æ®åº“çš„ä¸€æ¬¡ä¼šè¯ï¼Œç”¨å®Œå…³é—­
+	 * 		3ï¼‰ä½¿ç”¨sqlçš„å”¯ä¸€æ ‡è¯†æ¥å‘Šè¯‰MyBatisæ‰§è¡Œå“ªä¸ªsqlï¼Œsqléƒ½æ˜¯ä¿å­˜åœ¨sqlæ˜ å°„æ–‡ä»¶ä¸­çš„
 	 * @throws Exception
 	 */
 	@Test
 	void test() throws Exception {
-		//1.»ñÈ¡sqlSessionFactory¶ÔÏó
+		//1.è·å–sqlSessionFactoryå¯¹è±¡
 		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
 		
-		//2.»ñÈ¡sqlSessionÊµÀı£¬ÄÜÖ±½ÓÖ´ĞĞÒÑ¾­Ó³ÉäµÄsqlÓï¾ä
+		//2.è·å–sqlSessionå®ä¾‹ï¼Œèƒ½ç›´æ¥æ‰§è¡Œå·²ç»æ˜ å°„çš„sqlè¯­å¥
 		SqlSession session = sqlSessionFactory.openSession();
 		try {
-			//sqlµÄÎ¨Ò»±êÊ¶£ºstatement Unique identifier matching the statement to use.
-			//Ö´ĞĞsqlÒªÓÃµÄ²ÎÊı£ºparameter A parameter object to pass to the statement.
+			//sqlçš„å”¯ä¸€æ ‡è¯†ï¼šstatement Unique identifier matching the statement to use.
+			//æ‰§è¡Œsqlè¦ç”¨çš„å‚æ•°ï¼šparameter A parameter object to pass to the statement.
 			Employee e = session.selectOne("com.yws.dao.EmployeeMapper.getEmpById", 1);
 			System.out.println(e);		
 		}finally {
@@ -70,7 +70,7 @@ class MyBatisTest {
 	}
 
 	/**
-	 * »ñÈ¡sqlSessionFactory¶ÔÏó
+	 * è·å–sqlSessionFactoryå¯¹è±¡
 	 * @return
 	 * @throws IOException
 	 */
@@ -83,15 +83,15 @@ class MyBatisTest {
 	
 	@Test
 	void test01() throws Exception {
-		//1.»ñÈ¡sqlSessionFactory¶ÔÏó
+		//1.è·å–sqlSessionFactoryå¯¹è±¡
 		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
 		
-		//2.»ñÈ¡sqlSessionÊµÀı£¬ÄÜÖ±½ÓÖ´ĞĞÒÑ¾­Ó³ÉäµÄsqlÓï¾ä
+		//2.è·å–sqlSessionå®ä¾‹ï¼Œèƒ½ç›´æ¥æ‰§è¡Œå·²ç»æ˜ å°„çš„sqlè¯­å¥
 		SqlSession session = sqlSessionFactory.openSession();
 		
 		try {
-			//3.»ñÈ¡½Ó¿ÚµÄÊµÏÖÀà¶ÔÏó
-			//»áÎª½Ó¿Ú×Ô¶¯´´½¨Ò»¸ö´úÀí¶ÔÏó£¬´úÀí¶ÔÏóÈ¥Ö´ĞĞÔöÉ¾¸Ä²é·½·¨
+			//3.è·å–æ¥å£çš„å®ç°ç±»å¯¹è±¡
+			//ä¼šä¸ºæ¥å£è‡ªåŠ¨åˆ›å»ºä¸€ä¸ªä»£ç†å¯¹è±¡ï¼Œä»£ç†å¯¹è±¡å»æ‰§è¡Œå¢åˆ æ”¹æŸ¥æ–¹æ³•
 			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
 			System.out.println(mapper.getClass());
 			Employee emp = mapper.getEmpById(1);
@@ -103,15 +103,15 @@ class MyBatisTest {
 	
 	@Test
 	void test02() throws Exception {
-		//1.»ñÈ¡sqlSessionFactory¶ÔÏó
+		//1.è·å–sqlSessionFactoryå¯¹è±¡
 		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
 		
-		//2.»ñÈ¡sqlSessionÊµÀı£¬ÄÜÖ±½ÓÖ´ĞĞÒÑ¾­Ó³ÉäµÄsqlÓï¾ä
+		//2.è·å–sqlSessionå®ä¾‹ï¼Œèƒ½ç›´æ¥æ‰§è¡Œå·²ç»æ˜ å°„çš„sqlè¯­å¥
 		SqlSession session = sqlSessionFactory.openSession();
 		
 		try {
-			//3.»ñÈ¡½Ó¿ÚµÄÊµÏÖÀà¶ÔÏó
-			//»áÎª½Ó¿Ú×Ô¶¯´´½¨Ò»¸ö´úÀí¶ÔÏó£¬´úÀí¶ÔÏóÈ¥Ö´ĞĞÔöÉ¾¸Ä²é·½·¨
+			//3.è·å–æ¥å£çš„å®ç°ç±»å¯¹è±¡
+			//ä¼šä¸ºæ¥å£è‡ªåŠ¨åˆ›å»ºä¸€ä¸ªä»£ç†å¯¹è±¡ï¼Œä»£ç†å¯¹è±¡å»æ‰§è¡Œå¢åˆ æ”¹æŸ¥æ–¹æ³•
 			EmployeeMapperAnnotation mapper = session.getMapper(EmployeeMapperAnnotation.class);			
 			Employee emp = mapper.getEmployee(1);
 			System.out.println(emp);
@@ -121,35 +121,35 @@ class MyBatisTest {
 	}
 	
 	/**
-	 * ²âÊÔÔöÉ¾¸Ä
-	 * 1.mybatisÔÊĞíÔöÉ¾¸ÄÖ±½Ó¶¨ÒåÒÔÏÂÀàĞÍ·µ»ØÖµ
+	 * æµ‹è¯•å¢åˆ æ”¹
+	 * 1.mybatiså…è®¸å¢åˆ æ”¹ç›´æ¥å®šä¹‰ä»¥ä¸‹ç±»å‹è¿”å›å€¼
 	 * 		Integer,Long,Boolean
-	 * 2.ÎÒÃÇĞèÒªÊÖ¶¯Ìá½»ÊÂÎñ
-	 * 		sqlSessionFactory.openSession(); -->ÊÖ¶¯Ìá½»
-	 * 		sqlSessionFactory.openSession(true); -->×Ô¶¯Ìá½»
+	 * 2.æˆ‘ä»¬éœ€è¦æ‰‹åŠ¨æäº¤äº‹åŠ¡
+	 * 		sqlSessionFactory.openSession(); -->æ‰‹åŠ¨æäº¤
+	 * 		sqlSessionFactory.openSession(true); -->è‡ªåŠ¨æäº¤
 	 * @throws Exception
 	 */
 	@Test
 	void test03() throws Exception {
 		SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
-		//1.»ñÈ¡µ½µÄsqlSession²»»á×Ô¶¯Ìá½»ÊÂÎñ
+		//1.è·å–åˆ°çš„sqlSessionä¸ä¼šè‡ªåŠ¨æäº¤äº‹åŠ¡
 		SqlSession session = sqlSessionFactory.openSession();
 		
 		try {
 			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
-			//Ôö¼Ó
+			//å¢åŠ 
 			Employee employee = new Employee(null, "jerry3", "123@qq.com", "1");
 			mapper.addEmp(employee);
 			System.out.println(employee.getId());
 			
-			//ĞŞ¸Ä
+			//ä¿®æ”¹
 //			Employee employee = new Employee(1, "jerry", "jerry@qq.com", "0");
 //			mapper.updateEmp(employee);
 			
-			//É¾³ı
+			//åˆ é™¤
 //			mapper.deleteEmpById(3);
 			
-			//2.ÊÖ¶¯Ìá½»ÊÂÎñ
+			//2.æ‰‹åŠ¨æäº¤äº‹åŠ¡
 			session.commit();
 		} finally {
 			session.close();
@@ -240,18 +240,18 @@ class MyBatisTest {
 				List<Employee> emps = mapper.getEmpsByConditionIf(emp);
 				emps.stream().forEach(e -> System.out.println(e));
 				
-				//²éÑ¯µÄÊ±ºòÈç¹ûÄ³Ğ©Ìõ¼şÃ»´ø¿ÉÄÜsqlÆ´×°»áÓĞÎÊÌâ
-				//1.¸øwhereºóÃæ¼ÓÉÏ1=1£¬ÒÔºóµÄÌõ¼ş¶¼"and xxx"
-				//2.mybatisÊ¹ÓÃwhere±êÇ©À´½«ËùÓĞµÄ²éÑ¯Ìõ¼ş°üÀ¨ÔÚÄÚ¡£mybatis»á½«where±êÇ©ÖĞÆ´×°³öÀ´µÄsql£¬¶à³öµÄand»òÕßorÉ¾µô
-					//where±êÇ©Ö»»áÈ¥µôµÚÒ»¸ö¶à³öÀ´µÄand»òÕßor
+				//æŸ¥è¯¢çš„æ—¶å€™å¦‚æœæŸäº›æ¡ä»¶æ²¡å¸¦å¯èƒ½sqlæ‹¼è£…ä¼šæœ‰é—®é¢˜
+				//1.ç»™whereåé¢åŠ ä¸Š1=1ï¼Œä»¥åçš„æ¡ä»¶éƒ½"and xxx"
+				//2.mybatisä½¿ç”¨whereæ ‡ç­¾æ¥å°†æ‰€æœ‰çš„æŸ¥è¯¢æ¡ä»¶åŒ…æ‹¬åœ¨å†…ã€‚mybatisä¼šå°†whereæ ‡ç­¾ä¸­æ‹¼è£…å‡ºæ¥çš„sqlï¼Œå¤šå‡ºçš„andæˆ–è€…oråˆ æ‰
+					//whereæ ‡ç­¾åªä¼šå»æ‰ç¬¬ä¸€ä¸ªå¤šå‡ºæ¥çš„andæˆ–è€…or
 				
-				//²âÊÔtrim
+				//æµ‹è¯•trim
 				/*
 				 * emps = mapper.getEmpsByConditionTrim(emp); emps.stream().forEach(e ->
 				 * System.out.println(e));
 				 */
 				
-				//²âÊÔchoose
+				//æµ‹è¯•choose
 				/*
 				 * emps = mapper.getEmpsByConditionChoose(emp); 
 				 * emps.stream().forEach(e->System.out.println(e));

@@ -10,7 +10,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	#{id}：从传递过来的参数中取出id值
 	-->
 <mapper namespace="com.yws.dao.EmployeeMapper">
-	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="mysql">
+	
+	<!-- <cache eviction="FIFO" readOnly="false" flushInterval="60000" size="1024"></cache> -->
+	
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+	
+	<!-- 
+		eviction：缓存的回收策略
+			LRU - 最近最少使用的：移除最长时间不被使用的对象。
+			FIFO - 先进先出：按对象进入缓存的顺序来移除它们。
+			SOFT - 软引用：移除基于垃圾回收器状态和软引用规则的对象。
+			WEAK - 弱引用：更积极地移除基于垃圾收集器状态和弱引用规则的对象。
+			默认的是LRU。
+		flushInterval：缓存刷新间隔
+			缓存多长时间清一次，默认不清空，设置一个毫秒值
+		readOnly：是否只读
+			true：只读；mybatis认为所有从缓存中获取数据的操作都是只读操作，不会修改数据。
+					 mybatis为了加快获取速度，直接就会将数据在缓存中的引用交给用户。不安全，速度快
+			false：非只读；mybatis觉得获取的数据可能会被修改。
+					 mybatis会利用序列化&反序列化技术克隆一份新的给你。安全，速度慢
+		size：缓存放多少元素
+		type：指定自定义缓存的全类名
+			实现Cache接口即可；			 
+	
+	 -->
+
+	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="mysql" useCache="true">
 		select * from tbl_employee where id = #{id}
 	</select>
 	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="oracle">

@@ -4,6 +4,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.yws.dao.DepartmentMapper">
+	<!-- 
+		引用缓存：namespace：指定和哪个名称空间下的缓存一样
+	 -->
+	<cache-ref namespace="com.yws.dao.EmployeeMapper"/>
+
 	<select id="getDepById" resultType="com.yws.bean.Department">
 		select * from 
 			tbl_dept

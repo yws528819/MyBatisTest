@@ -45,6 +45,14 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	</typeAliases>
 
 
+	<plugins>
+		<plugin interceptor="com.yws.dao.MyFirstPlugin">
+			<property name="username" value="root"/>
+			<property name="password" value="123456"/>
+		</plugin>
+	</plugins>
+
+
 	<!--  
 		4.environtments：环境们，mybatis可以配置多种环境，default指定使用某种环境，可以达到快速切换环境
 			environtment：配置一个具体的环境信息；必须要有两个标签；id代表当前环境的唯一标识

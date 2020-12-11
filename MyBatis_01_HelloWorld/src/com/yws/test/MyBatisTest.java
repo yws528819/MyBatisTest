@@ -93,6 +93,24 @@ class MyBatisTest {
 	 * 		代理对象里面包含了，DefaultSqlSession(Executor)
 	 * 4.执行增删改查方法
 	 * 
+	 * 总结：
+	 * 	1.根据配置文件（全局，sql映射）初始化出Configuration对象
+	 * 	2.创建出一个DefaultSqlSession对象
+	 * 		他立面包含Configuration
+	 * 		以及Executor（根据全局配置文件中的defaultExecutorType创建出相应的Executor）
+	 * 	3.DefaultSqlSession.getMapper()；拿到Mapper接口对应的MapperProxy
+	 * 	4.MapperProxy里面有（DefaultSqlSession）；
+	 * 	5.执行增删改查方法：
+	 * 		1）调用DefaultSqlSesion的增删改查（Executor）
+	 * 		2）会创建一个StatementHandler对象
+	 * 			（同时也会创建出ParameterHandler和ResultSetHandler）
+	 * 		3）调用StatementHandler预编译参数和设置参数值
+	 * 			使用ParameterHandler来给sql设置参数
+	 * 		4）调用StatementHandler的增删改查方法；
+	 * 		5）ResultSetHandler封装结果
+	 * 注意：
+	 * 	四大对象每个创建的时候都有一个interceptorChain.pluginAll(parameterHandler);
+	 * 	
 	 * @throws Exception
 	 */
 	@Test

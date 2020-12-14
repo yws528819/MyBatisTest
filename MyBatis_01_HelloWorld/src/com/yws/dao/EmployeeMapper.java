@@ -11,23 +11,23 @@ import com.yws.bean.Employee;
 public interface EmployeeMapper {
 	public Employee getEmpById(Integer id);
 	
-	//ÔöÉ¾¸Ä
+	//å¢åˆ æ”¹
 	public void addEmp(Employee employee);
 	
 	public boolean updateEmp(Employee employee);
 	
 	public void deleteEmpById(Integer id);
 	
-	//²ÎÊı´¦Àí
+	//å‚æ•°å¤„ç†
 	public Employee getEmpByIdAndLastName(@Param("id") Integer id, @Param("lastName") String lastName);
 	
 	public List<Employee> getEmpsByLastNameLike(String lastName);
 	
-	//·µ»ØÒ»Ìõ¼ÇÂ¼µÄmap£»key¾ÍÊÇÁĞÃû£¬Öµ¾ÍÊÇ¶ÔÓ¦µÄÖµ
+	//è¿”å›ä¸€æ¡è®°å½•çš„mapï¼›keyå°±æ˜¯åˆ—åï¼Œå€¼å°±æ˜¯å¯¹åº”çš„å€¼
 	public Map<String, Object> getEmpBIdReturnMap(Integer id);
 	
-	//¶àÌõ¼ÇÂ¼·â×°Ò»¸ömap£ºMap<Integer,Employee>£º¼üÊÇÕâÌõ¼ÇÂ¼µÄÖ÷¼ü£¬ÖµÊÇ¼ÇÂ¼·â×°ºóµÄjavaBean
-	//¸æËßmybatis·â×°Õâ¸ömapµÄÊ±ºòÊ¹ÓÃÄÄ¸öÊôĞÔ×÷ÎªmapµÄkey
+	//å¤šæ¡è®°å½•å°è£…ä¸€ä¸ªmapï¼šMap<Integer,Employee>ï¼šé”®æ˜¯è¿™æ¡è®°å½•çš„ä¸»é”®ï¼Œå€¼æ˜¯è®°å½•å°è£…åçš„javaBean
+	//å‘Šè¯‰mybatiså°è£…è¿™ä¸ªmapçš„æ—¶å€™ä½¿ç”¨å“ªä¸ªå±æ€§ä½œä¸ºmapçš„key
 	@MapKey("id")
 	public Map<Integer, Employee> getEmpByLastNameLikeReturnMap(String lastName);
 }

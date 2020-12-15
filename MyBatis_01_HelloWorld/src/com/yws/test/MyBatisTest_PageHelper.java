@@ -31,12 +31,13 @@ class MyBatisTest_PageHelper {
 		SqlSession session = sqlSessionFactory.openSession();
 		try {
 			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
-			Page<Object> page = PageHelper.startPage(1, 1);
+			Page<Object> page = PageHelper.startPage(6, 1);
 			List<Employee> emps = mapper.getEmps();
 			
 			emps.stream().forEach(e -> System.out.println(e));
 			
 			//PageInfo<Employee> info = new PageInfo<>(emps);
+			//传入要连续显示多少页
 			PageInfo<Employee> info = new PageInfo<>(emps, 4);
 			
 			/*
@@ -51,6 +52,7 @@ class MyBatisTest_PageHelper {
 			System.out.println("是否第一页：" + info.isIsFirstPage());
 			System.out.println("是否最后一页：" + info.isIsLastPage());
 			
+			System.out.println("连续显示的页码：");
 			int[] nums = info.getNavigatepageNums();
 			Arrays.stream(nums).forEach(e -> System.out.println(e));
 		}finally {

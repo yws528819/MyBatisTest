@@ -123,4 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where last_name like #{lastName}	 
 	</select>
 	
+	<select id="getEmps" resultType="com.yws.bean.Employee">
+		select * from tbl_employee
+	</select>
 </mapper>

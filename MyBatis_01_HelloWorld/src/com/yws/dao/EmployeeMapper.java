@@ -30,4 +30,7 @@ public interface EmployeeMapper {
 	//告诉mybatis封装这个map的时候使用哪个属性作为map的key
 	@MapKey("id")
 	public Map<Integer, Employee> getEmpByLastNameLikeReturnMap(String lastName);
+	
+	
+	public List<Employee> getEmps();
 }

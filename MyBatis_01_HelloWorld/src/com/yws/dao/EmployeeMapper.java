@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import com.yws.bean.Employee;
+import com.yws.bean.Page;
 
 public interface EmployeeMapper {
 	public Employee getEmpById(Integer id);
@@ -33,4 +34,6 @@ public interface EmployeeMapper {
 	
 	
 	public List<Employee> getEmps();
+	
+	public void getPageByProcedure(Page page);
 }

@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- <cache eviction="FIFO" readOnly="false" flushInterval="60000" size="1024"></cache> -->
 	
-	<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+<!-- 	<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache> -->
 	
 	<!-- 
 		eviction：缓存的回收策略
@@ -35,9 +35,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	 -->
 
-	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="mysql" useCache="true">
+<!-- 	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="mysql" useCache="true">
 		select * from tbl_employee where id = #{id}
-	</select>
+	</select> -->
 	<select id="getEmpById" resultType="com.yws.bean.Employee" databaseId="oracle">
 		select * from tbl_employee where id = #{id}
 	</select>
@@ -126,4 +126,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="getEmps" resultType="com.yws.bean.Employee">
 		select * from tbl_employee
 	</select>
+	
+	<!-- 
+		1.使用select标签定义调用存储过程
+		2.statementType="CALLABLE"：表示调用存储过程
+	 -->
+	<select id="getPageByProcedure" statementType="CALLABLE" databaseId="oracle">
+		{class hello_test(
+			#{start, mode=IN, jdbcType=INTEGER}, 
+			#{end, mode=IN, jdbcType=INTEGER}, 
+			#{count, mode=OUT, jdbcType=INTEGER}, 
+			#{emps, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=pageEmp}
+		)}
+	</select>
+	
+	<resultMap type="com.yws.bean.Employee" id="pageEmp">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<!-- 其他一样就不再写，会默认已写  -->
+	</resultMap>
+	
 </mapper>

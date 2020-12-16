@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 					自定义数据源，实现DataSourceFactory接口，type是全类名
 			
 	-->
-	<environments default="dev_mysql">
+	<environments default="dev_oracle">
 	
 		<environment id="dev_mysql">
 			<transactionManager type="JDBC" />

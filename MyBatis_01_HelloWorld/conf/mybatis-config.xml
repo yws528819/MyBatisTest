@@ -44,13 +44,16 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<!-- 3.批量起别名的情况下，使用@Alias注解为某个类型指定新的类名 -->
 	</typeAliases>
 
+	<typeHandlers>
+		<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.yws.bean.EmpStatus"/>
+	</typeHandlers>
 
 	<plugins>
-		<plugin interceptor="com.yws.dao.MyFirstPlugin">
+<!-- 		<plugin interceptor="com.yws.dao.MyFirstPlugin">
 			<property name="username" value="root"/>
 			<property name="password" value="123456"/>
 		</plugin>
-		<plugin interceptor="com.yws.dao.MySecondPlugin"></plugin>
+		<plugin interceptor="com.yws.dao.MySecondPlugin"></plugin> -->
 		
 		<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
 	</plugins>
@@ -70,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 					自定义数据源，实现DataSourceFactory接口，type是全类名
 			
 	-->
-	<environments default="dev_oracle">
+	<environments default="dev_mysql">
 	
 		<environment id="dev_mysql">
 			<transactionManager type="JDBC" />

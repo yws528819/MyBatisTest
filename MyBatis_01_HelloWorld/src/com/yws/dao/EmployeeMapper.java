@@ -34,6 +34,4 @@ public interface EmployeeMapper {
 	
 	
 	public List<Employee> getEmps();
-	
-	public void getPageByProcedure(Page page);
 }

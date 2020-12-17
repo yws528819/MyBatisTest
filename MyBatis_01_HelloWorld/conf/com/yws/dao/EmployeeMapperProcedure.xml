@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yws.dao.EmployeeMapperProcedure">
+	
+	<!-- 
+		1.使用select标签定义调用存储过程
+		2.statementType="CALLABLE"：表示调用存储过程
+	 -->
+	<select id="getPageByProcedure" statementType="CALLABLE" databaseId="oracle">
+		{call hello_test(
+			#{start, mode=IN, jdbcType=INTEGER}, 
+			#{end, mode=IN, jdbcType=INTEGER}, 
+			#{count, mode=OUT, jdbcType=INTEGER}, 
+			#{emps, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=pageEmp}
+		)}
+	</select>
+	
+	<resultMap type="com.yws.bean.Employee" id="pageEmp">
+		<id column="id" property="id"/>
+		<result column="last_name" property="lastName"/>
+		<!-- 其他一样就不再写，会默认已写  -->
+	</resultMap>
+	
+</mapper>

@@ -40,13 +40,16 @@ public class MyBatisTest_EnumType {
 	 @Test
 	 public void testEnum() throws Exception{
 		 SqlSessionFactory sqlSessionFactory = getSqlSessionFactory();
-		 //可以执行批量操作的sqlSession
 		 SqlSession session = sqlSessionFactory.openSession();
 		 try {
 			EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
 			Employee employee = new Employee(null, "test_enum2", "223@enum.com", "0");
+			//employee.setEmpStatus(EmpStatus.REMOVE);
 			mapper.addEmp(employee);
 			session.commit();
+			
+			Employee empById = mapper.getEmpById(employee.getId());
+			System.out.println(empById.getEmpStatus());
 		} finally {
 			session.close();
 		}
@@ -57,5 +60,7 @@ public class MyBatisTest_EnumType {
 		 EmpStatus login = EmpStatus.LOGIN;
 		 System.out.println("枚举的索引：" + login.ordinal());
 		 System.out.println("枚举的名字：" + login.name());
+		 System.out.println("枚举的状态码：" + login.getCode());
+		 System.out.println("枚举的提示消息：" + login.getMsg());
 	 }
 }

@@ -2,7 +2,6 @@ package com.yws.test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -10,9 +9,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Test;
 
-import com.yws.bean.Employee;
 import com.yws.bean.Page;
-import com.yws.dao.EmployeeMapper;
+import com.yws.dao.EmployeeMapperProcedure;
 
 public class MyBatisTest_Procedure {
 	/**
@@ -34,7 +32,7 @@ public class MyBatisTest_Procedure {
 		 SqlSession session = sqlSessionFactory.openSession();
 		 long start = System.currentTimeMillis();
 		 try {
-			 EmployeeMapper mapper = session.getMapper(EmployeeMapper.class);
+			 EmployeeMapperProcedure mapper = session.getMapper(EmployeeMapperProcedure.class);
 			 Page page = new Page();
 			 page.setStart(2);
 			 page.setEnd(5);
